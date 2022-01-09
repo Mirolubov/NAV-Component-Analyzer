@@ -5,8 +5,11 @@ package com.company;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main extends JFrame{
@@ -17,31 +20,31 @@ public class Main extends JFrame{
 
     public Main() {
         //--MENU
-        JMenuBar menubar = createMenuBar();
-        setJMenuBar(menubar);
-
+        JMenuBar menuBar = createMenuBar();
+        setJMenuBar(menuBar);
         // -------------------------------------------
-        // настройка окна
         setTitle("Navision Component Analyzer"); // заголовок окна
-        // желательные размеры окна
-        //setPreferredSize(new Dimension(320, 200));
         setMinimumSize(new Dimension(320, 200));
-        //setMaximumSize(new Dimension(640, 480));
-        // завершить приложение при закрытии окна
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                close();
+            }
+        });
         pack(); // устанавливаем желательные размеры
+        SwingUtilities.updateComponentTreeUI(this);
         setVisible(true); // отображаем окно
     }
 
     private JMenuBar createMenuBar() {
-        JMenuBar menubar = new JMenuBar();
+        JMenuBar menuBar= new JMenuBar();
         // создаем меню
         JMenu menu = createMenuFile();
-        menubar.add(menu);
+        menuBar.add(menu);
 
         menu = createMenuThemes();
-        menubar.add(menu);
-        return menubar;
+        menuBar.add(menu);
+        return menuBar;
     }
 
     private JMenu createMenuFile() {
@@ -52,7 +55,7 @@ public class Main extends JFrame{
         // элемент 1
         JMenuItem itm = new JMenuItem("Open");
         itm.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O,
-                ActionEvent.CTRL_MASK));
+                InputEvent.CTRL_DOWN_MASK));
         menu.add(itm);
         itm.addActionListener(fileListener);
 
@@ -72,7 +75,7 @@ public class Main extends JFrame{
         // элемент 3
         itm = new JMenuItem("Close");
         itm.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_X,
-                ActionEvent.CTRL_MASK));
+                InputEvent.CTRL_DOWN_MASK));
         itm.addActionListener(fileListener);
         menu.add(itm);
         return menu;
@@ -85,6 +88,19 @@ public class Main extends JFrame{
         ArrayList<Theme> themeList = themeListener.getThemeList();
         String currentLookAndFeelName =
                 UIManager.getLookAndFeel().getClass().getName();
+
+        String configLookAndFeelName = ConfigFile.getInstance().getTheme();
+        if(configLookAndFeelName != null) {
+            if(!configLookAndFeelName.equals(currentLookAndFeelName)) {
+                currentLookAndFeelName = configLookAndFeelName;
+                try {
+                    UIManager.setLookAndFeel(currentLookAndFeelName);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
+
         for (Theme theme : themeList) {
             JRadioButtonMenuItem itm = new JRadioButtonMenuItem (theme.name);
             itm.addActionListener(themeListener);
@@ -97,7 +113,12 @@ public class Main extends JFrame{
         return menu;
     }
 
-    public void finish() {
+    public void close() {
+        try {
+            ConfigFile.getInstance().closeAndSaveConfig();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         dispose();
         System.exit(0);
     }

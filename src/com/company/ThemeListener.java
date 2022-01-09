@@ -1,3 +1,6 @@
+//Copyright 2022 Artiom Mirolyubov
+//Licensed under the Apache License, Version 2.0
+
 package com.company;
 
 import javax.swing.*;
@@ -6,8 +9,8 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class ThemeListener  implements ActionListener {
-    private ArrayList<Theme> themeList;
-    private JFrame rootFrame;
+    private final ArrayList<Theme> themeList;
+    private final JFrame rootFrame;
 
     public ThemeListener(JFrame rootFrame) {
         this.rootFrame = rootFrame;
@@ -41,6 +44,8 @@ public class ThemeListener  implements ActionListener {
         try {
             UIManager.setLookAndFeel(themeClassName);
             SwingUtilities.updateComponentTreeUI(rootFrame);
+            ConfigFile config = ConfigFile.getInstance();
+            config.setTheme(themeClassName);
         } catch (Exception e) {
             e.printStackTrace();
         }

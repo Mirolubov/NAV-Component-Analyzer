@@ -9,8 +9,11 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Main extends JFrame{
 
@@ -60,16 +63,17 @@ public class Main extends JFrame{
         itm.addActionListener(fileListener);
 
         // элемент 2
-        JMenu submenu = new JMenu("OpenRecent");
-        itm = new JMenuItem("Recent File 1");
-        itm.addActionListener(fileListener);
-        submenu.add(itm);
-        itm = new JMenuItem("Recent File 2");
-        itm.addActionListener(fileListener);
-        submenu.add(itm);
-        itm = new JMenuItem("Recent File 3");
-        itm.addActionListener(fileListener);
-        submenu.add(itm);
+        JMenu submenu = new JMenu("Open Recent");
+        ConfigFile configFile = ConfigFile.getInstance();
+        ArrayList<String> recentFiles = configFile.getRecentFiles();
+        for (String path : recentFiles) {
+            File file = new File(path);
+            if(file.exists()) {
+                itm = new JMenuItem(file.getName());
+                itm.addActionListener(fileListener);
+                submenu.add(itm);
+            }
+        }
         menu.add(submenu);
 
         // элемент 3

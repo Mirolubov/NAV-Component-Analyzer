@@ -21,11 +21,20 @@ public class FileListener implements ActionListener {
                 rootFrame.close();
                 break;
             case "Open":
-                JOptionPane.showMessageDialog(null, "Open");
+                openFile();
                 break;
             default:
                 System.out.println("Unhandled command: " + command);
                 break;
+        }
+    }
+
+    private void openFile() {
+        JFileChooser fileOpen = new JFileChooser();
+        int ret = fileOpen.showDialog(null, "Open File");
+        if (ret == JFileChooser.APPROVE_OPTION) {
+            ConfigFile configFile = ConfigFile.getInstance();
+            configFile.setRecentFile(fileOpen.getSelectedFile().getAbsolutePath());
         }
     }
 }

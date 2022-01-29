@@ -1,7 +1,7 @@
 # NAV-Component-Analyzer
 Component Analyzer for Navision c/al code
 
-#ENU
+##ENU
 We are developing in Navision 2018 using SOA component model.<br>
 This means we distinguish separate "components" while design phase (low Coupling).<br>
 Objects related to one component are marked with a component tag in object Version property. Format [Tag].<br>
@@ -13,7 +13,7 @@ This program is intended for:
 2. Detect coupling of "components" for highlighting design errors.
 3. Visualization of the obtained result.
 
-#RUS
+##RUS
 Мы ведем разработку в Navision 2018 используя подход SOA.<br>
 Это означает что при проектировании выделяются "компоненты" независимые друг от друга (с низкой связанностью).<br>
 Объекты относящиеся к одному компоненту помечаются тегом компонента в свойстве объекта "Версия" в формате [Tag].<br>

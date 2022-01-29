@@ -5,6 +5,8 @@ package com.company;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.util.ArrayList;
 
 public class FileListener implements ActionListener {
     private Main rootFrame;
@@ -25,6 +27,7 @@ public class FileListener implements ActionListener {
                 break;
             default:
                 System.out.println("Unhandled command: " + command);
+                processFile(command);
                 break;
         }
     }
@@ -34,7 +37,27 @@ public class FileListener implements ActionListener {
         int ret = fileOpen.showDialog(null, "Open File");
         if (ret == JFileChooser.APPROVE_OPTION) {
             ConfigFile configFile = ConfigFile.getInstance();
-            configFile.setRecentFile(fileOpen.getSelectedFile().getAbsolutePath());
+            String path = fileOpen.getSelectedFile().getAbsolutePath();
+            configFile.setRecentFile(path);
+            File file = new File(path);
+            processFile(file.getName());
+        }
+    }
+
+    private void processFile(String command) {
+        ConfigFile configFile = ConfigFile.getInstance();
+        ArrayList<String> recentFiles = configFile.getRecentFiles();
+        for (String path : recentFiles) {
+            File file = new File(path);
+            if(file.getName().equals(command)) {
+                if (file.exists()) {
+                    ProcessFile process = new ProcessFile(file);
+                } else {
+                    String fileNotExists = String.format("File %s not exists", path);
+                    System.out.println(fileNotExists);
+                    JOptionPane.showMessageDialog(rootFrame, fileNotExists);
+                }
+            }
         }
     }
 }

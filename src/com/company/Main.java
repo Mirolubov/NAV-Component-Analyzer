@@ -4,6 +4,7 @@
 package com.company;
 
 import javax.swing.*;
+import javax.swing.tree.DefaultMutableTreeNode;
 import java.awt.*;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -16,27 +17,93 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Main extends JFrame{
+    private JPanel treePanel;
+    private JPanel controlPanel;
 
     public static void main(String[] args) {
-        new Main();
+        Main navCompAnalyzer = new Main();
+        navCompAnalyzer.showTree();
     }
 
     public Main() {
+        prepareGUI();
+    }
+
+    private void prepareGUI() {
         //--MENU
         JMenuBar menuBar = createMenuBar();
         setJMenuBar(menuBar);
         // -------------------------------------------
         setTitle("Navision Component Analyzer"); // заголовок окна
         setMinimumSize(new Dimension(320, 200));
+        setLayout(new GridLayout(1, 2));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 close();
             }
         });
+
+        treePanel = new JPanel();
+        treePanel.setLayout(new BorderLayout());
+
+        controlPanel = new JPanel();
+        controlPanel.setLayout(new FlowLayout());
+
+        add(treePanel);
+        add(controlPanel);
+
         pack(); // устанавливаем желательные размеры
         SwingUtilities.updateComponentTreeUI(this);
         setVisible(true); // отображаем окно
+    }
+    private void showTree() {
+        // Create a root tree item as department
+        DefaultMutableTreeNode department = new DefaultMutableTreeNode("Department");
+
+        //create other tree items as department names
+        DefaultMutableTreeNode salesDepartment = new DefaultMutableTreeNode("Sales");
+        DefaultMutableTreeNode marketingDepartment = new DefaultMutableTreeNode("Marketing");
+        DefaultMutableTreeNode manufacturingDepartment = new DefaultMutableTreeNode("Manufacturing");
+
+        //create other tree items as employees
+        DefaultMutableTreeNode employee1 = new DefaultMutableTreeNode("Robert");
+        DefaultMutableTreeNode employee2 = new DefaultMutableTreeNode("Joe");
+        DefaultMutableTreeNode employee3 = new DefaultMutableTreeNode("Chris");
+
+        //add employees to sales department
+        salesDepartment.add(employee1);
+        salesDepartment.add(employee2);
+        salesDepartment.add(employee3);
+
+        //create other tree items as employees
+        DefaultMutableTreeNode employee4 = new DefaultMutableTreeNode("Mona");
+        DefaultMutableTreeNode employee5 = new DefaultMutableTreeNode("Tena");
+
+
+        //add employees to marketing department
+        marketingDepartment.add(employee4);
+        marketingDepartment.add(employee5);
+
+        //create other tree items as employees
+        DefaultMutableTreeNode employee6 = new DefaultMutableTreeNode("Rener");
+        DefaultMutableTreeNode employee7 = new DefaultMutableTreeNode("Linda");
+
+        //add employees to sales department
+        manufacturingDepartment.add(employee6);
+        manufacturingDepartment.add(employee7);
+
+        //add departments to department item
+        department.add(salesDepartment);
+        department.add(marketingDepartment);
+        department.add(manufacturingDepartment);
+
+        //create the tree with department as root node
+        JTree tree = new JTree(department);
+        JScrollPane treeView = new JScrollPane(tree);
+        treePanel.add(treeView, BorderLayout.WEST);
+
+        setVisible(true);
     }
 
     private JMenuBar createMenuBar() {

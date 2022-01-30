@@ -26,7 +26,6 @@ public class FileListener implements ActionListener {
                 openFile();
                 break;
             default:
-                System.out.println("Unhandled command: " + command);
                 processFile(command);
                 break;
         }
@@ -52,6 +51,7 @@ public class FileListener implements ActionListener {
             if(file.getName().equals(command)) {
                 if (file.exists()) {
                     ProcessFile process = new ProcessFile(file);
+                    process.printObjects();
                 } else {
                     String fileNotExists = String.format("File %s not exists", path);
                     System.out.println(fileNotExists);
